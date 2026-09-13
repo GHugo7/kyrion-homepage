@@ -1,0 +1,117 @@
+:root {
+    --text: #e1e7ef;
+    --background: #12203d;
+    --primary: #1d283a;
+    --secondary: #344256;
+    --accent: #3abff8;
+    --online: #22c55e;
+    --offline: #ef4444;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+    margin-left: 100px;                     /* Fait un espace externe (vers la droite) */
+    margin-top: 40px;                      /* Fait un espace externe (vers le bas) */
+}
+
+body h1 {
+    background: linear-gradient(to top, var(--accent), var(--primary));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.categorie-box {
+    border: 3px solid var(--secondary);
+    background-color: var(--);
+    border-radius: 10px;
+    padding: 20px;
+    padding-top: 10px;
+    margin-bottom: 20px;
+    margin-right: 200px;
+}
+.categorie-box h2 {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.services-grid {
+    display: grid;                                                      /* Creer des grilles */
+    grid-template-columns: repeat(auto-fit, 350px);                     /* X service par colums */   
+    gap: 20px;                                        
+}
+
+.service-box {
+    background-color: var(--primary);
+    border: 2px solid var(--secondary);     /* Fait une bordure */  
+    border-radius: 5px;                     /* Arrondi sur la bordure */
+    padding: 20px;                          /* Fait un espace interne */
+    padding-top: 0;
+    padding-bottom: 30px;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.service-box:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+}
+
+.service-box h3 {
+    color: var(--accent);
+}
+
+.status-dot {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 8px;
+    margin-top: 8px;
+}
+.status-dot.online {
+    background-color: var(--online);
+}
+.status-dot.offline {
+    background-color: var(--offline);
+}
+
+.btn-aller {
+    background-color: var(--accent);
+    color: var(--secondary);
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.service-box button:hover {
+    opacity: 0.85;
+}
+
+.logo {
+    width: 150px;
+    height: 90px;
+}
+
+.site-header {
+    display: flex;
+    align-items: center;
+    background: var(--primary);
+    padding: 0px;
+    border-bottom: var(--secondary);
+    position: sticky;
+}
+
+.btn-admin {
+    background-color: var(--accent);
+    color: var(--secondary);
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}

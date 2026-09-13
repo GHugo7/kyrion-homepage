@@ -1,22 +1,20 @@
 package main
 
 import (
-	"html/template"
+	"encoding/json"
 	"net/http"
 
 	"github.com/metalblueberry/console"
 )
 
-func HandlerIndex(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("template/html/index.html")
-	if err != nil {
-		console.Error("Erreur lors du chargement du template index")
-		return
-	}
+func handlerServices(w http.ResponseWriter, r *http.Request) {
+	console.Info("Chargement des services")
+
 	type Services struct {
-		Titre       string
-		Description string
-		Categories  string
+		Titre       string `json:"titre"`
+		Description string `json:"description"`
+		Categories  string `json:"categories"`
 	}
-	tmpl.Execute(w, Services{Titre: "Hey what's up", Categories: "Moto"})
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Services{Titre: "Hey what's up", Categories: "Moto"})
 }

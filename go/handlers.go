@@ -7,14 +7,27 @@ import (
 	"github.com/metalblueberry/console"
 )
 
-func handlerServices(w http.ResponseWriter, r *http.Request) {
-	console.Info("Chargement des services")
+func filterCat(services []Service) []Category {
+	grouped := map[string][]Service{}
+	var r []Category
 
-	type Services struct {
-		Titre       string `json:"titre"`
-		Description string `json:"description"`
-		Categories  string `json:"categories"`
+	for _, s := range services {
+		grouped[s.Categories] = append(grouped[s.Categories], s)
 	}
+	for nom, liste := range grouped {
+		r = append(r, Category{Nom: nom, Services: liste})
+	}
+	return r
+}
+
+func handlerServices(w http.ResponseWriter, r *http.Request) {
+	service, err := getDockerServices()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		console.Error(err)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(Services{Titre: "Hey what's up", Categories: "Moto"})
+	json.NewEncoder(w).Encode(filterCat(service))
 }

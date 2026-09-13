@@ -2,11 +2,18 @@ package main
 
 import (
 	"context"
+	"database/sql"
+	"strings"
 
 	"github.com/moby/moby/client"
 )
 
-func getDockerServices() ([]Service, error) {
+var forceContainers = map[string]string{
+	"supabase-studio": "https://supabase.kyrion.ovh",
+	"LuBot":           "https://discord.com/developers/applications/1501259137386942605/bot",
+}
+
+func getDockerServices(db *sql.DB) ([]Service, error) {
 	ctx := context.Background()
 
 	cli, err := client.New(client.FromEnv)
@@ -15,18 +22,62 @@ func getDockerServices() ([]Service, error) {
 	}
 	defer cli.Close()
 
-	containers, err := cli.ContainerList(ctx, client.ContainerListOptions{})
+	containers, err := cli.ContainerList(ctx, client.ContainerListOptions{All: true})
+	if err != nil {
+		return nil, err
+	}
+
+	overrides, err := loadOverride(db)
 	if err != nil {
 		return nil, err
 	}
 
 	var services []Service
+	hosts, _ := getNPMProxyHosts()
+
 	for _, c := range containers.Items {
+		nom := strings.TrimPrefix(c.Names[0], "/")
+
+		override, exists := overrides[nom]
+		if !exists || !override.Enabled {
+			continue
+		}
+
+		url := override.URL
+		if url == "" {
+			url = matchNPMUrl(nom, hosts)
+		}
+
 		services = append(services, Service{
-			Titre:       c.Names[0],
+			Titre:       nom,
 			Description: c.Status,
-			Categories:  "Homelab",
+			Categories:  override.Category,
+			Url:         url,
+			Online:      c.State == "running",
 		})
 	}
 	return services, nil
+}
+
+func getContainerNames() ([]string, error) {
+
+	cli, err := client.New(client.FromEnv)
+	if err != nil {
+		return nil, err
+	}
+	defer cli.Close()
+
+	ctx := context.Background()
+	containers, err := cli.ContainerList(ctx, client.ContainerListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	var names []string
+	for _, c := range containers.Items {
+		nom := strings.TrimPrefix(c.Names[0], "/")
+		names = append(names, nom)
+	}
+
+	return names, nil
 }

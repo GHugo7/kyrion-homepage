@@ -8,11 +8,6 @@ import (
 	"github.com/moby/moby/client"
 )
 
-var forceContainers = map[string]string{
-	"supabase-studio": "https://supabase.kyrion.ovh",
-	"LuBot":           "https://discord.com/developers/applications/1501259137386942605/bot",
-}
-
 func getDockerServices(db *sql.DB) ([]Service, error) {
 	ctx := context.Background()
 

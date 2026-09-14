@@ -12,6 +12,11 @@ import (
 
 func getNPMProxyHosts() ([]NPMProxyHost, error) {
 	godotenv.Load()
+
+	npmURL := os.Getenv("NPM_URL")
+	if npmURL == "" {
+		npmURL = "http://localhost:81"
+	}
 	// Etape 1: login
 	loginBody := map[string]string{
 		"identity": os.Getenv("NPM_IDENTITY"),
@@ -19,7 +24,7 @@ func getNPMProxyHosts() ([]NPMProxyHost, error) {
 	}
 	jsonBody, _ := json.Marshal(loginBody)
 
-	resp, err := http.Post("http://192.168.1.69:81/api/tokens", "application/json", bytes.NewBuffer(jsonBody))
+	resp, err := http.Post(npmURL+"/api/tokens", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +34,7 @@ func getNPMProxyHosts() ([]NPMProxyHost, error) {
 	json.Unmarshal(bodyBytes, &tokenResp)
 
 	// Etape 2: GET url
-	req, err := http.NewRequest("GET", "http://192.168.1.69:81/api/nginx/proxy-hosts", nil)
+	req, err := http.NewRequest("GET", npmURL+"/api/nginx/proxy-hosts", nil)
 	if err != nil {
 		return nil, err
 	}

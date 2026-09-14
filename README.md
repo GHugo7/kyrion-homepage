@@ -98,6 +98,7 @@ L'interface est servie sur `http://localhost:5173`.
 |---|---|---|
 | `NPM_IDENTITY` | Identifiant Nginx Proxy Manager | — |
 | `NPM_SECRET` | Mot de passe Nginx Proxy Manager | — |
+| `NPM_URL` | URL de l'instance Nginx Proxy Manager | `http://localhost:81` |
 | `ALLOWED_ORIGINS` | Origines CORS autorisées, séparées par des virgules | `http://localhost:5173` |
 
 ## API

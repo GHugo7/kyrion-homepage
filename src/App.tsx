@@ -19,7 +19,7 @@ export default function App() {
     const [ categorie, setCategorie ] = useState<Categorie[]>([]);
     const [ selectedService, setSelectedService] = useState<Service | null>(null);
 
-    const api = "http://192.168.1.69:1818/api/services"
+    const api = "/api/services"
     useEffect(() => { 
         fetch(api)
         .then(reponse => reponse.json())
